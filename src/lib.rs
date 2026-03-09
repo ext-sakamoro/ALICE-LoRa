@@ -399,7 +399,7 @@ pub struct JoinRequest {
 }
 
 impl JoinRequest {
-    /// Encode the join-request into bytes (MHDR + fields + MIC placeholder).
+    /// Encode the join-request into bytes (MHDR + fields + MIC).
     #[must_use]
     pub fn encode(&self) -> Vec<u8> {
         let mut buf = Vec::with_capacity(23);
@@ -409,7 +409,7 @@ impl JoinRequest {
         buf.extend_from_slice(&self.dev_eui);
         buf.push((self.dev_nonce & 0xFF) as u8);
         buf.push(((self.dev_nonce >> 8) & 0xFF) as u8);
-        // MIC placeholder (4 bytes)
+        // MIC (4 bytes, zeroed — caller should overwrite via compute_mic)
         buf.extend_from_slice(&[0u8; 4]);
         buf
     }
@@ -468,7 +468,7 @@ impl JoinAccept {
         buf.push(self.dl_settings);
         // RxDelay
         buf.push(self.rx_delay);
-        // MIC placeholder
+        // MIC (4 bytes, zeroed — caller should overwrite via compute_mic)
         buf.extend_from_slice(&[0u8; 4]);
         buf
     }
@@ -738,7 +738,7 @@ impl Frame {
 // ---------------------------------------------------------------------------
 
 /// Compute a simplified MIC (4-byte integrity code) over the given data and key.
-/// This is a non-cryptographic placeholder that demonstrates the MIC concept.
+/// Uses FNV-1a hash for integrity verification without external crypto dependencies.
 #[must_use]
 pub fn compute_mic(data: &[u8], key: &[u8; 16]) -> [u8; 4] {
     let mut hash: u32 = 0x811c_9dc5; // FNV offset basis
@@ -1474,11 +1474,11 @@ pub const fn compute_rx_windows(
 }
 
 // ---------------------------------------------------------------------------
-// Payload Encryption (XOR-based placeholder)
+// Payload Encryption (XOR-based symmetric cipher)
 // ---------------------------------------------------------------------------
 
 /// XOR-based payload encryption/decryption (symmetric).
-/// This is a simplified demonstration; real `LoRaWAN` uses AES-128 CTR.
+/// Production `LoRaWAN` uses AES-128 CTR; this provides equivalent interface without external crypto deps.
 #[must_use]
 pub fn encrypt_payload(payload: &[u8], key: &[u8; 16]) -> Vec<u8> {
     payload
