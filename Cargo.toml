@@ -1,10 +1,13 @@
 [package]
 name = "alice-lora"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Moroya Sakamoto <sakamoro@alicelaw.net>"]
 license = "MIT OR Apache-2.0"
 description = "LoRaWAN protocol implementation: chirp spread spectrum, ADR, OTAA/ABP, MAC commands, device classes A/B/C"
+repository = "https://github.com/ext-sakamoro/ALICE-LoRa"
+keywords = ["lora", "lorawan", "iot", "embedded", "radio"]
+categories = ["network-programming", "embedded", "hardware-support"]
 
 [lib]
 crate-type = ["rlib"]
