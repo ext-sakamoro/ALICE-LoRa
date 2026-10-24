@@ -47,6 +47,10 @@ allow = [
 # ---------------------------------------------------------------------------
 # Bans (banned crate / duplicate / wildcard)
 # ---------------------------------------------------------------------------
+
+[licenses.private]
+ignore = true
+
 [bans]
 multiple-versions = "warn"
 wildcards = "allow"
